@@ -32,6 +32,10 @@ export const metadata: Metadata = {
 
   description: siteConfig.description,
 
+  alternates: {
+    canonical: "./",
+  },
+
   authors: [
     {
       name: siteConfig.name,

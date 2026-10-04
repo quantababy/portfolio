@@ -34,63 +34,37 @@ A claim moves through a DSA processing engine, an autonomous verification agent,
 
 The architecture gives each stage a specific responsibility rather than relying on one model to perform the entire verification process.
 
-> **Project status:** VeritasChain is the completed first project in this portfolio. The implementation, testing, and measured results documented on this page will be based on the final working system.
+The DSA layer handles claim processing and prioritization. The AI agent coordinates verification operations. The RAG layer retrieves supporting evidence. The graph-based ML layer evaluates source relationships and trust. The blockchain layer provides an auditable record of the resulting verdict.
+
+> **Project status:** VeritasChain is a completed project combining DSA, LLM/RAG, graph-based machine learning, real-time backend communication, and blockchain-backed verification.
 
 ## System workflow
 
-The complete workflow is:
+The complete VeritasChain workflow is:
 
-![VeritasChain system workflow showing the DSA engine, AI agent, LLM + RAG, GNN engine, and blockchain layers](/projects/veritaschain/workflow.png)
+![VeritasChain system workflow showing the DSA engine, AI agent, LLM and RAG pipeline, GNN source-trust engine, and blockchain audit layer](/projects/veritaschain/workflow.png)
 
-The pipeline begins with the user interface and moves through increasingly specialized processing stages before producing a structured, auditable verdict.
+The system separates the verification process into independent processing stages.
 
-## Architecture
+A claim first enters the application through the frontend. The backend then processes and prioritizes the claim before passing it through the autonomous verification and evidence-retrieval layers.
 
-The system is organized into several layers, with each layer responsible for a specific part of the verification pipeline.
+The verification result is evaluated using source relationships and trust information before the final verdict is preserved through the blockchain and IPFS layer.
 
-### DSA processing engine
-
-The DSA layer provides the processing backbone of the system.
-
-The architecture uses data structures and algorithms for claim processing, including:
-
-- Trie-based claim deduplication
-- Priority-queue based scheduling
-- Graph-based source relationships
-- Network analysis for source relationships
-
-This layer organizes and processes claims before they reach the more computationally expensive AI and retrieval stages.
-
-### AI agent
-
-The AI agent coordinates the verification workflow.
-
-The system uses a LangGraph-based agent to coordinate specialized operations rather than relying on a single model response.
-
-The agent can orchestrate operations such as:
-
-- Web search
-- Evidence retrieval
-- Source reputation scoring
-- Blockchain lookups
-- Article scraping
-- LLM-based fact checking
-
-The agent coordinates these operations to produce the information required for a structured verification verdict.
-
-### LLM + RAG
-
-The retrieval layer combines large language models with retrieval-augmented generation.
-
-FAISS provides the vector-search component, while LangChain coordinates the retrieval pipeline.
-
-The purpose of this layer is to ground the verification process in retrieved evidence instead of relying entirely on the language model's internal knowledge.
-
-The final verdict follows a structured schema containing information such as:
+The planned processing flow is:
 
 ```text
-verdict
-confidence
-sources_used
-agent_reasoning
-tx_hash
+User Claim
+    ↓
+DSA Processing Engine
+    ↓
+Autonomous Verification Agent
+    ↓
+Evidence Retrieval
+    ↓
+LLM + RAG
+    ↓
+GNN Source-Trust Scoring
+    ↓
+Structured Verdict
+    ↓
+Blockchain + IPFS Audit Record
