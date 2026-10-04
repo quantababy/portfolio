@@ -1,69 +1,147 @@
-import Image from "next/image";
+import Link from "next/link";
+import { siteConfig } from "@/lib/site";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div>
+      {/* Hero */}
+      <section className="mx-auto max-w-6xl px-5 pb-20 pt-20 sm:pb-28 sm:pt-28">
+        <div className="max-w-3xl">
+          <p className="mb-5 font-mono text-sm text-[var(--accent)]">
+            {siteConfig.role} · {siteConfig.location}
           </p>
+
+          <h1 className="font-display text-5xl leading-[1.05] tracking-tight sm:text-7xl">
+            I build software that solves real problems.
+          </h1>
+
+          <p className="mt-7 max-w-2xl text-lg leading-8 text-[var(--muted)]">
+            I work across AI, backend systems, and web development, with a
+            focus on building useful products and understanding the engineering
+            behind them.
+          </p>
+
+          <div className="mt-9 flex flex-wrap gap-3">
+            <Link
+              href="#projects"
+              className="rounded-full bg-[var(--foreground)] px-5 py-3 text-sm font-medium text-[var(--background)] transition-transform hover:-translate-y-0.5"
+            >
+              View projects
+            </Link>
+
+            <Link
+              href="/resume"
+              className="rounded-full border border-[var(--line)] px-5 py-3 text-sm font-medium transition-colors hover:border-[var(--foreground)]"
+            >
+              Resume
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+      </section>
+
+      {/* Projects */}
+      <section
+        id="projects"
+        className="border-t border-[var(--line)]"
+      >
+        <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
+          <div className="mb-10">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
+              Selected work
+            </p>
+
+            <h2 className="mt-3 font-display text-4xl tracking-tight sm:text-5xl">
+              Projects
+            </h2>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <article className="rounded-2xl border border-[var(--line)] p-6">
+              <p className="font-mono text-xs text-[var(--accent)]">
+                PROJECT 01
+              </p>
+
+              <h3 className="mt-5 text-2xl font-semibold">
+                Project coming soon
+              </h3>
+
+              <p className="mt-3 leading-7 text-[var(--muted)]">
+                A detailed engineering case study will go here, including
+                architecture, technical decisions, results, and what broke.
+              </p>
+            </article>
+
+            <article className="rounded-2xl border border-[var(--line)] p-6">
+              <p className="font-mono text-xs text-[var(--accent)]">
+                PROJECT 02
+              </p>
+
+              <h3 className="mt-5 text-2xl font-semibold">
+                Project coming soon
+              </h3>
+
+              <p className="mt-3 leading-7 text-[var(--muted)]">
+                Another real project with links to the repository, demo, and
+                supporting evidence.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* About */}
+      <section className="border-t border-[var(--line)]">
+        <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
+          <div className="grid gap-10 md:grid-cols-[1fr_2fr]">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
+              About
+            </p>
+
+            <div className="max-w-2xl">
+              <p className="text-xl leading-8">
+                I&apos;m interested in software engineering, artificial
+                intelligence, backend systems, and building products that are
+                technically sound and useful.
+              </p>
+
+              <p className="mt-5 leading-7 text-[var(--muted)]">
+                More about my background, current work, and the roles I&apos;m
+                looking for will live here.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Links */}
+      <section className="border-t border-[var(--line)]">
+        <div className="mx-auto flex max-w-6xl flex-wrap gap-x-8 gap-y-3 px-5 py-10 font-mono text-sm">
           <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            href={siteConfig.links.github}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noreferrer"
+            className="hover:text-[var(--accent)]"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
+            GitHub ↗
           </a>
+
           <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            href={siteConfig.links.linkedin}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noreferrer"
+            className="hover:text-[var(--accent)]"
           >
-            Documentation
+            LinkedIn ↗
+          </a>
+
+          <a
+            href={siteConfig.links.email}
+            className="hover:text-[var(--accent)]"
+          >
+            Email ↗
           </a>
         </div>
-      </main>
+      </section>
     </div>
   );
 }
