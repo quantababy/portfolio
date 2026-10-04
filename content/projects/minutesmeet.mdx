@@ -1,0 +1,60 @@
+---
+title: "MinutesMeet"
+summary: "An AI meeting-minutes generator that converts recorded meeting audio into structured, formatted minutes using Whisper speech recognition and Llama-based language processing."
+status: "Completed"
+stack:
+  - Python
+  - FastAPI
+  - PyTorch
+  - Hugging Face Transformers
+  - Whisper
+  - Llama 3.2
+  - BitsAndBytes
+  - CUDA
+  - React
+  - WebSockets
+  - Markdown
+github: "https://github.com/"
+live: ""
+---
+
+## Overview
+
+MinutesMeet is an AI-powered meeting-minutes generation system designed to convert recorded meeting audio into structured meeting documentation.
+
+The system is designed around a two-stage machine-learning pipeline that combines automatic speech recognition with large language model processing.
+
+The first stage uses OpenAI's Whisper model to convert recorded meeting audio into raw transcript text.
+
+The second stage uses Meta's Llama-3.2-3B-Instruct model to analyze the transcript and generate structured meeting minutes containing information such as attendees, discussion points, key decisions, takeaways, and action items.
+
+> **Project status:** MinutesMeet's core machine-learning pipeline is implemented around Whisper transcription and Llama-based meeting-minute generation, with the architecture designed for interactive frontend integration and real-time output streaming.
+
+## System workflow
+
+The intended MinutesMeet workflow is:
+
+![MinutesMeet system workflow showing audio upload, FastAPI file intake, Whisper speech recognition, prompt construction, Llama generation, and streamed meeting minutes](/projects/minutesmeet/workflow.png)
+
+The complete architecture separates frontend interaction, backend processing, speech recognition, prompt construction, and language-model generation into independent stages.
+
+The processing pipeline is:
+
+```text
+Audio Recording
+        ↓
+Frontend Upload
+        ↓
+FastAPI / File Intake
+        ↓
+Whisper ASR Model
+        ↓
+Raw Transcript
+        ↓
+Prompt Construction
+        ↓
+Llama-3.2-3B-Instruct
+        ↓
+Streamed Tokens
+        ↓
+Rendered Meeting Minutes

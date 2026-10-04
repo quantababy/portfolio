@@ -1,0 +1,64 @@
+---
+title: "AEGIS"
+summary: "An AI-security platform for automated red-teaming and vulnerability intelligence, built around an algorithmic attack-processing engine."
+status: "In progress"
+stack:
+  - Python
+  - Data Structures & Algorithms
+  - Bloom Filter
+  - Trie
+  - Priority Queue
+  - Graph Algorithms
+  - BFS
+  - DFS
+  - LangChain
+  - FAISS
+  - Ollama
+  - DistilBERT
+  - XGBoost
+  - FastAPI
+  - React
+  - Solidity
+  - Web3.py
+  - Polygon
+  - IPFS
+github: "https://github.com/"
+live: ""
+---
+
+## Overview
+
+AEGIS is an AI-security platform designed to automate red-teaming of language models and organize the vulnerabilities discovered during security testing.
+
+The system is designed around a pipeline that combines attack knowledge, autonomous attack generation, data structures and algorithms, target-model evaluation, machine-learning classification, and vulnerability intelligence.
+
+The current implementation is approximately 60% complete.
+
+The Python foundation and DSA attack-processing engine have been implemented. The remaining layers will connect this processing engine to autonomous attack generation, target-model evaluation, machine-learning classification, defense, and vulnerability provenance.
+
+> **Project status:** AEGIS is currently in active development. The Python DSA attack engine is implemented, while the higher-level AI-security pipeline is being built on top of it.
+
+## System workflow
+
+The intended AEGIS workflow is:
+
+![AEGIS system workflow showing the attack knowledge base, red-team agent, DSA engine, target model, ML classifier, and vulnerability registry](/projects/aegis/workflow.png)
+
+The complete architecture separates attack generation, attack processing, model evaluation, classification, and vulnerability storage into independent stages.
+
+The current implementation reaches the DSA engine stage.
+
+The planned end-to-end flow is:
+
+```text
+Attack Knowledge Base
+        ↓
+Red-Team Agent
+        ↓
+DSA Engine
+        ↓
+Target Model
+        ↓
+ML Classifier
+        ↓
+Vulnerability Registry

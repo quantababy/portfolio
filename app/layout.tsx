@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Playfair_Display } from "next/font/google";
-import "./globals.css";
 
-import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { SiteHeader } from "@/components/SiteHeader";
+import { siteConfig } from "@/lib/site";
+
+import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -21,12 +23,54 @@ const display = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+
   title: {
-    default: "Your Name — Software Engineer",
-    template: "%s — Your Name",
+    default: "Prabhat Tiwari — Software Engineer",
+    template: "%s — Prabhat Tiwari",
   },
-  description:
-    "Portfolio of Your Name, a software engineer building practical systems across AI, web development, and backend engineering.",
+
+  description: siteConfig.description,
+
+  authors: [
+    {
+      name: siteConfig.name,
+    },
+  ],
+
+  creator: siteConfig.name,
+
+  keywords: [
+    "Prabhat Tiwari",
+    "Software Engineer",
+    "Software Engineering",
+    "AI",
+    "Machine Learning",
+    "Backend Engineering",
+    "Web Development",
+    "Python",
+    "FastAPI",
+    "Next.js",
+  ],
+
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    siteName: "Prabhat Tiwari",
+    title: "Prabhat Tiwari — Software Engineer",
+    description: siteConfig.description,
+  },
+
+  twitter: {
+    card: "summary",
+    title: "Prabhat Tiwari — Software Engineer",
+    description: siteConfig.description,
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

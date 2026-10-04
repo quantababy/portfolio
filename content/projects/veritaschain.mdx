@@ -1,0 +1,96 @@
+---
+title: "VeritasChain"
+summary: "A decentralized AI fact-checking pipeline combining DSA-based claim processing, an autonomous verification agent, RAG, source-trust scoring, and blockchain-backed auditability."
+status: "Completed"
+stack:
+  - Python
+  - FastAPI
+  - WebSockets
+  - LangGraph
+  - LangChain
+  - FAISS
+  - PyTorch Geometric
+  - React
+  - TypeScript
+  - PostgreSQL
+  - Redis
+  - Solidity
+  - Web3.py
+  - Polygon
+  - IPFS
+github: "https://github.com/"
+live: ""
+---
+
+## Overview
+
+VeritasChain is a decentralized AI fact-checking system designed to answer a difficult question:
+
+**How can an AI-generated fact-checking result be supported by evidence, evaluated for source credibility, and preserved as an auditable record?**
+
+Instead of treating fact checking as a single LLM request, VeritasChain separates the process into multiple engineering layers.
+
+A claim moves through a DSA processing engine, an autonomous verification agent, retrieval-augmented generation, source-trust scoring, and finally a blockchain-backed audit layer.
+
+The architecture gives each stage a specific responsibility rather than relying on one model to perform the entire verification process.
+
+> **Project status:** VeritasChain is the completed first project in this portfolio. The implementation, testing, and measured results documented on this page will be based on the final working system.
+
+## System workflow
+
+The complete workflow is:
+
+![VeritasChain system workflow showing the DSA engine, AI agent, LLM + RAG, GNN engine, and blockchain layers](/projects/veritaschain/workflow.png)
+
+The pipeline begins with the user interface and moves through increasingly specialized processing stages before producing a structured, auditable verdict.
+
+## Architecture
+
+The system is organized into several layers, with each layer responsible for a specific part of the verification pipeline.
+
+### DSA processing engine
+
+The DSA layer provides the processing backbone of the system.
+
+The architecture uses data structures and algorithms for claim processing, including:
+
+- Trie-based claim deduplication
+- Priority-queue based scheduling
+- Graph-based source relationships
+- Network analysis for source relationships
+
+This layer organizes and processes claims before they reach the more computationally expensive AI and retrieval stages.
+
+### AI agent
+
+The AI agent coordinates the verification workflow.
+
+The system uses a LangGraph-based agent to coordinate specialized operations rather than relying on a single model response.
+
+The agent can orchestrate operations such as:
+
+- Web search
+- Evidence retrieval
+- Source reputation scoring
+- Blockchain lookups
+- Article scraping
+- LLM-based fact checking
+
+The agent coordinates these operations to produce the information required for a structured verification verdict.
+
+### LLM + RAG
+
+The retrieval layer combines large language models with retrieval-augmented generation.
+
+FAISS provides the vector-search component, while LangChain coordinates the retrieval pipeline.
+
+The purpose of this layer is to ground the verification process in retrieved evidence instead of relying entirely on the language model's internal knowledge.
+
+The final verdict follows a structured schema containing information such as:
+
+```text
+verdict
+confidence
+sources_used
+agent_reasoning
+tx_hash
