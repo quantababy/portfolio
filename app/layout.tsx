@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Playfair_Display } from "next/font/google";
+import { JetBrains_Mono, Playfair_Display } from "next/font/google";
 
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { siteConfig } from "@/lib/site";
 
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
 
 const mono = JetBrains_Mono({
   variable: "--font-mono",
@@ -20,6 +15,7 @@ const mono = JetBrains_Mono({
 const display = Playfair_Display({
   variable: "--font-display",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -85,7 +81,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${mono.variable} ${display.variable} antialiased`}
+        className={`${mono.variable} ${display.variable} antialiased`}
       >
         <a
           href="#main-content"
