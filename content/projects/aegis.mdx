@@ -18,30 +18,124 @@ stack:
   - Web3.py
   - IPFS
 github: "https://github.com/quantababy/ageis"
-live: ""
 ---
 
 ## Overview
 
-AEGIS is an AI security system designed around automated red-teaming of language models.
+AEGIS is an AI security platform designed for automated red-teaming of AI systems. The system combines attack knowledge retrieval, LLM-driven attack generation, DSA-based attack processing, machine-learning-assisted vulnerability classification, and blockchain/IPFS-backed audit records.
 
-The system treats AI security testing as a pipeline rather than a single prompt-generation task.
+The project is designed around an end-to-end security workflow rather than a single attack-generation model. Each stage has a defined responsibility, from selecting relevant attack knowledge to producing structured vulnerability records.
 
-An attack knowledge base provides known attack patterns. An LLM-based red-team agent generates and mutates attack variants. A DSA layer removes duplicates and prioritizes the testing queue. The target model is evaluated in a controlled environment. Machine-learning components classify attacks and estimate severity. The resulting vulnerability information can then be preserved through a blockchain-backed audit layer.
+## Architecture
 
-The core workflow is:
+The high-level workflow is:
 
-```text
-Attack Knowledge Base
-        ↓
-LLM Red-Team Agent
-        ↓
-DSA Deduplication + Scheduling
-        ↓
-Target AI Model
-        ↓
-ML Classification / Severity
-        ↓
-Vulnerability Record
-        ↓
-Blockchain + IPFS Audit Layer
+![AEGIS system workflow showing the attack knowledge base, LLM red-team agent, DSA processing, target AI model, ML classification, and blockchain/IPFS audit layer](/projects/aegis/workflow.png)
+
+### Attack knowledge base
+
+The attack knowledge base provides reusable security knowledge to the red-team pipeline. FAISS is used for vector-based retrieval so that relevant attack information can be surfaced for a given testing objective.
+
+### LLM red-team agent
+
+The red-team agent uses LangChain and Hugging Face models to construct candidate attack prompts based on the target and retrieved security knowledge.
+
+The generated payloads are treated as untrusted test inputs rather than trusted application data.
+
+### DSA processing engine
+
+A dedicated processing layer handles attack organization, deduplication, prioritization, and scheduling.
+
+This separates attack-processing logic from the model-inference layer and makes the workflow easier to reason about and extend.
+
+### Target-model testing
+
+Generated attacks are sent to the target AI system through the testing pipeline. The objective is to identify undesirable or vulnerable model behavior under authorized security testing.
+
+The architecture is intended for controlled environments. Generated attack payloads should not be treated as inherently safe.
+
+### ML classification
+
+Potential vulnerabilities are processed through a machine-learning classification stage to organize findings and support severity-oriented reporting.
+
+The classification layer is intended to structure security findings rather than replace human security review.
+
+### Backend architecture
+
+FastAPI provides the backend API layer, while PostgreSQL stores structured application and vulnerability data.
+
+Redis is used for supporting asynchronous or transient processing requirements.
+
+Docker provides a consistent environment for running the application components.
+
+### Blockchain and IPFS audit layer
+
+Solidity and Web3.py provide the blockchain integration while IPFS is used for content-addressed storage.
+
+The blockchain layer is used as an audit and persistence mechanism for selected security records rather than as the computational engine of the red-team workflow.
+
+## Engineering decisions
+
+### Separate attack generation from attack processing
+
+The system separates LLM-based attack generation from deterministic DSA-based processing. This makes it possible to change the model layer without rewriting the scheduling and organization logic.
+
+### Retrieval-assisted security testing
+
+FAISS provides a retrieval layer for attack knowledge so that the red-team agent can work with relevant security information rather than relying entirely on model-generated knowledge.
+
+### Multiple analysis layers
+
+The architecture combines LLM generation, deterministic processing, and ML-based classification. Each layer addresses a different part of the security workflow.
+
+### Auditability
+
+Blockchain and IPFS were included to provide an auditable record layer for selected security findings and associated artifacts.
+
+## Results
+
+The completed system demonstrates an end-to-end architecture for AI red-teaming:
+
+- Security knowledge can be retrieved for testing tasks.
+- An LLM-based agent can generate candidate attack inputs.
+- DSA-based processing can organize and prioritize attacks.
+- Target-model responses can be collected for analysis.
+- ML classification can structure potential vulnerabilities.
+- Selected findings can be persisted through the blockchain/IPFS audit layer.
+
+No specific detection-accuracy, latency, throughput, or performance percentage is claimed here because the project does not include a published benchmark supporting those numbers.
+
+## What broke / constraints
+
+Building an automated red-team pipeline introduces several practical constraints.
+
+Generated attack payloads are untrusted by design, so their execution needs to remain isolated from sensitive infrastructure.
+
+Model-generated attacks can also be inconsistent, which makes deterministic processing and structured classification important parts of the architecture.
+
+The blockchain/IPFS layer introduces additional infrastructure complexity and should therefore be used selectively for auditability rather than for every intermediate computation.
+
+The system is intended for authorized security testing. It should be operated against systems where testing permission has been obtained.
+
+## Security boundaries
+
+AEGIS is designed for authorized AI security testing.
+
+Recommended deployment boundaries include:
+
+- Prefer local or controlled models for experimentation.
+- Keep credentials and secrets outside source code.
+- Isolate generated attack execution from sensitive infrastructure.
+- Treat generated payloads as untrusted input.
+- Restrict testing targets to systems for which authorization exists.
+- Review generated findings before treating them as confirmed vulnerabilities.
+
+## Next
+
+Potential future work includes improving attack-strategy selection, expanding the security knowledge base, adding richer vulnerability taxonomies, improving isolation around generated payload execution, and adding more systematic evaluation benchmarks.
+
+## Source code
+
+The complete implementation is available on GitHub:
+
+[View the AEGIS repository](https://github.com/quantababy/ageis)

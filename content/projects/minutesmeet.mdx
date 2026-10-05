@@ -15,32 +15,113 @@ stack:
   - WebSockets
   - Markdown
 github: "https://github.com/quantababy/text-to-speech-and-transcription-frontier-LLM-model"
-live: ""
 ---
 
 ## Overview
 
-MinutesMeet converts recorded meeting audio into structured meeting minutes.
+MinutesMeet is an AI-powered meeting-minutes pipeline that converts recorded meeting audio into structured Markdown notes.
 
-The core pipeline uses two machine-learning stages.
+The system separates speech recognition from language-model processing. Whisper is responsible for converting audio into a transcript, while Llama-3.2-3B-Instruct uses the transcript to generate structured meeting minutes.
 
-The first stage performs automatic speech recognition with OpenAI Whisper. The resulting transcript becomes the input to a Llama-3.2-3B-Instruct model, which extracts the information needed for structured meeting documentation.
+This two-stage design keeps the responsibilities of speech recognition and language generation separate.
 
-The generated output is formatted as Markdown minutes containing information such as attendees, discussion points, takeaways, and action items.
+## Architecture
 
-The core processing flow is:
+The high-level workflow is:
 
-```text
-Audio Recording
-      ↓
-Whisper Speech Recognition
-      ↓
-Raw Transcript
-      ↓
-Prompt Construction
-      ↓
-Llama-3.2-3B-Instruct
-      ↓
-Structured Meeting Minutes
-      ↓
-Markdown Output
+![MinutesMeet workflow showing audio recording, Whisper transcription, prompt construction, Llama inference, and Markdown output](/projects/minutesmeet/workflow.png)
+
+### Audio transcription
+
+The pipeline accepts recorded meeting audio and sends it through Whisper for speech recognition.
+
+Whisper produces the raw transcript that becomes the input to the downstream language-model stage.
+
+### Prompt construction
+
+The raw transcript is transformed into a structured prompt for the instruction-following language model.
+
+The prompt provides the model with the context and expected structure for the meeting minutes.
+
+### Llama inference
+
+Llama-3.2-3B-Instruct processes the prepared transcript and generates structured meeting notes.
+
+The model is used for information organization and summarization rather than speech recognition.
+
+### Output rendering
+
+The generated meeting minutes are returned as Markdown.
+
+Markdown provides a lightweight output format that can be read directly or integrated into other documentation workflows.
+
+## Application architecture
+
+FastAPI provides the backend API layer.
+
+The frontend is implemented with React, while WebSockets support communication for processing updates.
+
+PyTorch and CUDA provide the underlying machine-learning execution environment.
+
+Hugging Face Transformers provides the model integration layer, while BitsAndBytes supports quantized model execution.
+
+## Engineering decisions
+
+### Two-stage AI pipeline
+
+Speech recognition and meeting summarization are deliberately separated.
+
+Whisper handles the audio-to-text problem, while Llama handles the text-to-structured-minutes problem. This makes each stage independently replaceable.
+
+### Whisper for speech recognition
+
+Whisper was selected as the speech-recognition component because the project requires a dedicated transcription stage before language-model processing.
+
+### Llama for structured minutes
+
+Llama-3.2-3B-Instruct provides the instruction-following language-model stage used to transform transcripts into structured meeting minutes.
+
+### Quantized inference
+
+BitsAndBytes is used to support quantized model execution, helping make the language-model component more practical to run within available compute constraints.
+
+### Streaming communication
+
+WebSockets are used to support communication between the frontend and backend during processing.
+
+This allows the application architecture to support incremental status or processing updates rather than relying exclusively on a single synchronous request.
+
+## Results
+
+The completed pipeline demonstrates an end-to-end workflow:
+
+- Meeting audio can be processed through Whisper.
+- Speech is converted into a text transcript.
+- The transcript is transformed into a structured prompt.
+- Llama-3.2-3B-Instruct generates meeting minutes.
+- The result is returned as Markdown.
+- FastAPI provides the backend API.
+- React provides the frontend interface.
+- WebSockets support application communication during processing.
+
+No specific transcription accuracy, summarization quality, latency, or throughput percentage is claimed here because the project does not include a published benchmark supporting those numbers.
+
+## What broke / constraints
+
+The main constraint is the computational cost of running a language model alongside speech recognition.
+
+The project therefore uses quantization through BitsAndBytes and CUDA-based execution to make the inference pipeline more practical.
+
+Another constraint is that transcription quality directly affects downstream meeting summarization. Errors introduced during speech recognition can propagate into the generated minutes.
+
+The separation between transcription and summarization helps isolate these responsibilities and makes it possible to improve either stage independently.
+
+## Next
+
+Potential future work includes improving transcript cleanup, adding speaker identification, supporting richer meeting structures, improving streaming feedback, and evaluating the generated minutes against a consistent benchmark dataset.
+
+## Source code
+
+The complete implementation is available on GitHub:
+
+[View the MinutesMeet repository](https://github.com/quantababy/text-to-speech-and-transcription-frontier-LLM-model)
