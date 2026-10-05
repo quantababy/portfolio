@@ -1,6 +1,6 @@
 ---
 title: "MinutesMeet"
-summary: "An AI meeting-minutes generator that converts recorded meeting audio into structured, formatted minutes using Whisper speech recognition and Llama-based language processing."
+summary: "An AI meeting-minutes pipeline that converts recorded meeting audio into structured Markdown minutes using Whisper speech recognition and Llama-3.2-3B-Instruct."
 status: "Completed"
 stack:
   - Python
@@ -20,41 +20,27 @@ live: ""
 
 ## Overview
 
-MinutesMeet is an AI-powered meeting-minutes generation system designed to convert recorded meeting audio into structured meeting documentation.
+MinutesMeet converts recorded meeting audio into structured meeting minutes.
 
-The system is designed around a two-stage machine-learning pipeline that combines automatic speech recognition with large language model processing.
+The core pipeline uses two machine-learning stages.
 
-The first stage uses OpenAI's Whisper model to convert recorded meeting audio into raw transcript text.
+The first stage performs automatic speech recognition with OpenAI Whisper. The resulting transcript becomes the input to a Llama-3.2-3B-Instruct model, which extracts the information needed for structured meeting documentation.
 
-The second stage uses Meta's Llama-3.2-3B-Instruct model to analyze the transcript and generate structured meeting minutes containing information such as attendees, discussion points, key decisions, takeaways, and action items.
+The generated output is formatted as Markdown minutes containing information such as attendees, discussion points, takeaways, and action items.
 
-> **Project status:** MinutesMeet's core machine-learning pipeline is implemented around Whisper transcription and Llama-based meeting-minute generation, with the architecture designed for interactive frontend integration and real-time output streaming.
-
-## System workflow
-
-The intended MinutesMeet workflow is:
-
-![MinutesMeet system workflow showing audio upload, FastAPI file intake, Whisper speech recognition, prompt construction, Llama generation, and streamed meeting minutes](/projects/minutesmeet/workflow.png)
-
-The complete architecture separates frontend interaction, backend processing, speech recognition, prompt construction, and language-model generation into independent stages.
-
-The processing pipeline is:
+The core processing flow is:
 
 ```text
 Audio Recording
-        ↓
-Frontend Upload
-        ↓
-FastAPI / File Intake
-        ↓
-Whisper ASR Model
-        ↓
+      ↓
+Whisper Speech Recognition
+      ↓
 Raw Transcript
-        ↓
+      ↓
 Prompt Construction
-        ↓
+      ↓
 Llama-3.2-3B-Instruct
-        ↓
-Streamed Tokens
-        ↓
-Rendered Meeting Minutes
+      ↓
+Structured Meeting Minutes
+      ↓
+Markdown Output
