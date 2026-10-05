@@ -1,6 +1,6 @@
 ---
 title: "VeritasChain"
-summary: "A decentralized AI fact-checking pipeline combining DSA-based claim processing, an autonomous verification agent, RAG, source-trust scoring, and blockchain-backed auditability."
+summary: "A decentralized AI fact-checking pipeline combining DSA-based claim processing, RAG-based evidence retrieval, source-trust scoring, and blockchain-backed auditability."
 status: "Completed"
 stack:
   - Python
@@ -24,19 +24,19 @@ live: ""
 
 ## Overview
 
-VeritasChain is a decentralized AI fact-checking system designed to answer a difficult question:
+VeritasChain is a decentralized AI fact-checking system designed around a simple engineering problem:
 
-**How can an AI-generated fact-checking result be supported by evidence, evaluated for source credibility, and preserved as an auditable record?**
+**How can an AI-generated fact-checking result be supported by retrieved evidence, evaluated using source relationships, and preserved as an auditable record?**
 
-Instead of treating fact checking as a single LLM request, VeritasChain separates the process into multiple engineering layers.
+Instead of treating fact checking as a single LLM request, VeritasChain separates the workflow into multiple processing layers.
 
-A claim moves through a DSA processing engine, an autonomous verification agent, retrieval-augmented generation, source-trust scoring, and finally a blockchain-backed audit layer.
+A claim moves through DSA-based processing, verification orchestration, evidence retrieval, LLM-based verdict generation, source-trust analysis, and blockchain-backed persistence.
 
-The architecture gives each stage a specific responsibility rather than relying on one model to perform the entire verification process.
+Each layer has a defined responsibility rather than relying on one model to perform the entire verification process.
 
-The DSA layer handles claim processing and prioritization. The AI agent coordinates verification operations. The RAG layer retrieves supporting evidence. The graph-based ML layer evaluates source relationships and trust. The blockchain layer provides an auditable record of the resulting verdict.
+The DSA layer handles claim processing and prioritization. The verification layer coordinates the fact-checking workflow. The RAG layer retrieves relevant evidence. The graph-based ML layer works with source relationships and trust information. The blockchain and IPFS layer provides a persistent audit trail for the resulting record.
 
-> **Project status:** VeritasChain is a completed project combining DSA, LLM/RAG, graph-based machine learning, real-time backend communication, and blockchain-backed verification.
+> **Project status:** Completed end-to-end implementation combining DSA, LLM/RAG, graph-based machine learning, real-time backend communication, and blockchain-backed verification.
 
 ## System workflow
 
@@ -44,20 +44,20 @@ The complete VeritasChain workflow is:
 
 ![VeritasChain system workflow showing the DSA engine, AI agent, LLM and RAG pipeline, GNN source-trust engine, and blockchain audit layer](/projects/veritaschain/workflow.png)
 
-The system separates the verification process into independent processing stages.
+The system separates verification into independent processing stages.
 
-A claim first enters the application through the frontend. The backend then processes and prioritizes the claim before passing it through the autonomous verification and evidence-retrieval layers.
+A claim enters through the frontend and is sent to the FastAPI backend. The processing layer handles claim organization before the verification workflow retrieves supporting evidence and generates a structured result.
 
-The verification result is evaluated using source relationships and trust information before the final verdict is preserved through the blockchain and IPFS layer.
+The source-trust layer adds graph-based information to the verification process. The resulting record can then be connected to the blockchain and IPFS persistence layer for auditability.
 
-The planned processing flow is:
+The processing flow is:
 
 ```text
 User Claim
     ↓
 DSA Processing Engine
     ↓
-Autonomous Verification Agent
+Verification Agent
     ↓
 Evidence Retrieval
     ↓
