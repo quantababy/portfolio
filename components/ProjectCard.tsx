@@ -7,12 +7,19 @@ type ProjectCardProps = {
 };
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const statusColor =
+    project.status === "Completed"
+      ? "text-[#86efac]"
+      : "text-[#fca5a5]";
+
   return (
     <article className="group border-t border-[var(--line)] py-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="max-w-2xl">
           <div className="mb-2 flex items-center gap-3">
-            <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+            <span
+              className={`font-mono text-xs uppercase tracking-wider ${statusColor}`}
+            >
               {project.status}
             </span>
           </div>

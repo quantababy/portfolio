@@ -10,24 +10,26 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="mx-auto max-w-6xl px-5 pb-24 pt-20 sm:pb-28 sm:pt-28">
-        <div className="max-w-4xl">
-          <p className="font-mono text-sm text-[var(--muted)]">
-            {siteConfig.role} · {siteConfig.location}
-          </p>
+      <section className="mx-auto max-w-6xl px-5 pb-28 pt-20 sm:pb-32 sm:pt-28 lg:pb-36 lg:pt-32">
+        <div className="max-w-5xl">
+          <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.18em] text-[var(--muted)] sm:text-sm">
+            <span>{siteConfig.role}</span>
+            <span aria-hidden="true">·</span>
+            <span>{siteConfig.location}</span>
+          </div>
 
-          <h1 className="mt-6 max-w-4xl font-[family-name:var(--font-display)] text-5xl leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
+          <h1 className="mt-7 max-w-5xl font-[family-name:var(--font-display)] text-5xl leading-[1.02] tracking-tight sm:mt-8 sm:text-6xl lg:text-7xl xl:text-[5.25rem]">
             I build AI-powered software systems, from machine learning
             pipelines to backend and web applications.
           </h1>
 
-          <p className="mt-7 max-w-2xl text-lg leading-8 text-[var(--muted)] sm:text-xl">
+          <p className="mt-8 max-w-2xl text-lg leading-8 text-[var(--muted)] sm:mt-9 sm:text-xl">
             I&apos;m focused on AI/ML, backend engineering, web development,
             and the engineering decisions that turn ideas into practical
             software.
           </p>
 
-          <div className="mt-9 flex flex-wrap gap-3">
+          <div className="mt-10 flex flex-wrap gap-3">
             <Link
               href="#projects"
               className="rounded-md bg-[var(--foreground)] px-5 py-3 text-sm font-medium !text-[var(--background)] transition-opacity hover:opacity-80"
@@ -41,35 +43,6 @@ export default function Home() {
             >
               View resume
             </Link>
-          </div>
-
-          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 font-mono text-xs text-[var(--muted)]">
-            <a
-              href={siteConfig.links.github}
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-[var(--foreground)]"
-            >
-              GitHub ↗
-            </a>
-
-            <a
-              href={siteConfig.links.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-[var(--foreground)]"
-            >
-              LinkedIn ↗
-            </a>
-
-            <a
-              href={siteConfig.links.leetcode}
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-[var(--foreground)]"
-            >
-              LeetCode ↗
-            </a>
           </div>
         </div>
       </section>
@@ -187,31 +160,85 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="flex flex-wrap gap-5 font-mono text-sm">
+          <div className="flex items-center gap-5">
+            {/* GitHub */}
             <a
               href={siteConfig.links.github}
               target="_blank"
               rel="noreferrer"
-              className="transition-colors hover:text-[var(--accent)]"
+              aria-label="GitHub"
+              title="GitHub"
+              className="text-[var(--muted)] transition-colors hover:text-[var(--foreground)]"
             >
-              GitHub
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-6 w-6"
+                fill="currentColor"
+              >
+                <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-2.02c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.67 1.25 3.32.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.17A10.94 10.94 0 0 1 12 6.12c.97 0 1.94.13 2.85.38 2.19-1.48 3.15-1.17 3.15-1.17.62 1.58.23 2.75.11 3.04.73.8 1.18 1.82 1.18 3.07 0 4.41-2.7 5.39-5.27 5.67.41.35.78 1.04.78 2.1v3.11c0 .3.21.66.79.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" />
+              </svg>
             </a>
 
+            {/* LinkedIn */}
             <a
               href={siteConfig.links.linkedin}
               target="_blank"
               rel="noreferrer"
-              className="transition-colors hover:text-[var(--accent)]"
+              aria-label="LinkedIn"
+              title="LinkedIn"
+              className="text-[var(--muted)] transition-colors hover:text-[var(--foreground)]"
             >
-              LinkedIn
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-6 w-6"
+                fill="currentColor"
+              >
+                <path d="M4.98 3.5A2.5 2.5 0 1 1 5 8.5a2.5 2.5 0 0 1-.02-5ZM2.75 9.5h4.5V21h-4.5V9.5ZM9.5 9.5h4.31v1.57h.06c.6-1.14 2.07-2.34 4.26-2.34 4.56 0 5.4 3 5.4 6.9V21h-4.5v-4.77c0-1.14-.02-2.61-1.59-2.61-1.59 0-1.83 1.24-1.83 2.53V21H11.1V9.5H9.5Z" />
+              </svg>
             </a>
 
+            {/* LeetCode */}
             <a
-              href={siteConfig.links.email}
-              className="transition-colors hover:text-[var(--accent)]"
+              href={siteConfig.links.leetcode}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LeetCode"
+              title="LeetCode"
+              className="text-[var(--muted)] transition-colors hover:text-[var(--foreground)]"
             >
-              Email
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-6 w-6"
+                fill="currentColor"
+              >
+                <path d="M13.48 1.75a1.25 1.25 0 0 0-1.77 1.77l1.44 1.44-7.9 7.9a4.5 4.5 0 0 0 0 6.36l.56.56a4.5 4.5 0 0 0 6.36 0l7.9-7.9 1.44 1.44a1.25 1.25 0 0 0 1.77-1.77L13.48 1.75ZM10.4 18.02a2 2 0 0 1-2.83 0l-.56-.56a2 2 0 0 1 0-2.83l7.9-7.9 3.39 3.39-7.9 7.9ZM14.1 15.35a1.25 1.25 0 0 0 0-2.5h-3.5a1.25 1.25 0 0 0 0 2.5h3.5Z" />
+              </svg>
             </a>
+
+            {/* Email */}
+            <a
+                href={siteConfig.links.email}
+                aria-label="Email"
+                title="Email"
+                className="text-[var(--muted)] transition-colors hover:text-[var(--foreground)]"
+              >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <path d="m3 7 9 6 9-6" />
+                </svg>
+              </a>
           </div>
         </div>
       </section>
