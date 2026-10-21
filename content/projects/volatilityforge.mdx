@@ -1,7 +1,7 @@
 ---
 title: "VolatilityForge"
-summary: "A quantitative finance research platform for forecasting market volatility using statistical models, econometrics, machine learning, and transaction-cost-aware strategy evaluation."
-status: "In progress"
+summary: "A quantitative finance platform for forecasting market volatility using statistical models, econometrics, machine learning, and transaction-cost-aware strategy evaluation."
+status: "Completed"
 stack:
   - Python
   - pandas
@@ -20,199 +20,67 @@ github: "https://github.com/quantababy/VolatilityForge"
 
 ## Overview
 
-VolatilityForge is a quantitative finance research project focused on forecasting market volatility and evaluating how those forecasts behave in systematic volatility-targeting strategies.
+VolatilityForge is a quantitative finance research platform designed to forecast market volatility and evaluate its usefulness in systematic volatility-targeting strategies.
 
-The project combines historical market-data processing, realized-variance forecasting, econometric baselines, machine-learning models, statistical forecast comparisons, and transaction-cost-aware backtesting.
+The system combines market-data processing, statistical and econometric baselines, machine-learning forecasts, statistical comparisons, volatility-regime analysis, and transaction-cost-aware backtesting.
 
-The core asset is SPY, with VIX used as an implied-volatility reference. The forecasting system evaluates two horizons: next-day realized variance and cumulative realized variance over the next five trading days.
-
-Rather than evaluating models solely on predictive error, VolatilityForge also investigates volatility regimes, strategy exposure, turnover, and net performance after transaction costs.
-
-The project is designed around reproducible research and chronological evaluation. Model training and forecast evaluation use expanding-window walk-forward procedures, with safeguards intended to prevent future information from entering training or residual estimation.
+SPY is the core asset, with VIX used as an implied-volatility reference. The forecasting pipeline evaluates next-day realized variance and cumulative realized variance over the next five trading days.
 
 ## Architecture
 
 The high-level workflow is:
 
-1. Download and validate SPY and VIX market data.
-2. Align both assets on shared trading dates.
-3. Construct volatility features and forward realized-variance targets.
-4. Generate forecasts using statistical and machine-learning models.
-5. Evaluate forecasts using QLIKE and MSE.
-6. Compare forecasts statistically and analyze volatility regimes.
-7. Evaluate volatility-targeting strategies with transaction costs.
-8. Produce research reports and interactive dashboard views.
+![VolatilityForge workflow showing SPY and VIX data ingestion, feature engineering, forecasting models, walk-forward evaluation, strategy backtesting, and research dashboard](/projects/VolatilityForge/workflow.png)
 
 ### Market-data pipeline
 
-The data pipeline downloads daily SPY and VIX data using `yfinance`.
+The pipeline downloads daily SPY and VIX data using yfinance, validates the raw datasets, aligns both assets by date, and constructs volatility features and forward targets.
 
-Raw observations are validated and saved as Parquet files. The alignment stage joins both assets on normalized dates, while subsequent processing constructs volatility features and forward targets.
-
-The pipeline is configured through `configs/config.yaml`.
-
-Run the pipeline from the repository root with the project environment activated:
-
-```bash
-python -m src.run_data_pipeline
-```
-
-The pipeline produces:
-
-- `data/raw/spy.parquet`
-- `data/raw/vix.parquet`
-- `data/processed/spy_vix.parquet`
-- `data/processed/volatility_features.parquet`
-
-The pipeline requires network access for market-data downloads. Its integration test mocks the download operation so that the test can run without network access.
-
-Historical data can be revised by the provider. Rebuilding the pipeline therefore does not guarantee bit-for-bit reproducibility of previously downloaded observations.
+Configuration is managed through `configs/config.yaml`. The pipeline produces raw and processed Parquet datasets for subsequent forecasting and evaluation.
 
 ### Volatility forecasting
 
-VolatilityForge establishes statistical forecasting baselines before relying on more complex machine-learning models.
+The forecasting layer implements EWMA, GARCH, GJR-GARCH, HAR-RV, and LightGBM for one-day and five-day volatility forecasts.
 
-The implemented forecasting approaches include:
+HAR-RV serves as the primary benchmark. The system evaluates forecasts using QLIKE as the primary metric and mean squared error (MSE) as a secondary metric.
 
-- **EWMA:** an exponentially weighted volatility estimate.
-- **GARCH:** a conditional-volatility model.
-- **GJR-GARCH:** a conditional-volatility model that accommodates asymmetric responses to shocks.
-- **HAR-RV:** a heterogeneous autoregressive model for realized volatility.
-- **LightGBM:** a gradient-boosting model for nonlinear forecasting relationships.
+### Walk-forward evaluation
 
-The forecasting workflow evaluates one-day and five-day horizons.
+The evaluation pipeline uses chronological expanding-window walk-forward validation to preserve time ordering and prevent future information from entering model training.
 
-Ridge, Lasso, XGBoost, and a HAR-RV residual hybrid remain unverified as implemented in the current project documentation. They are not presented here as completed forecasting components.
-
-HAR-RV is the primary benchmark for the forecasting research.
-
-### Leakage-aware evaluation
-
-The project uses chronological expanding-window walk-forward evaluation rather than randomly splitting time-series observations.
-
-At each forecast origin, training data must satisfy the applicable information-availability constraints. Multi-day targets must have fully matured before they are eligible for training or residual estimation.
-
-This is particularly important for five-day forecasts, where the outcome associated with a recent observation may not yet be fully observed.
-
-The primary evaluation metric is QLIKE, with mean squared error (MSE) as a secondary metric.
-
-Diebold–Mariano forecast comparisons and HAC-lag sensitivity analysis are also implemented to investigate differences between competing forecasts.
-
-### Experimental HAR-RV smearing correction
-
-A separate experiment investigates Duan's smearing correction for five-day HAR-RV forecasts.
-
-The experiment estimates a multiplicative correction factor from historical out-of-sample log residuals. Only residuals whose five-day targets had fully matured before the forecast origin are eligible for estimation.
-
-The correction is implemented separately from the production HAR-RV forecasting code and has not been adopted as the production model.
-
-Keeping the experiment separate allows the research result to be evaluated without silently changing the established benchmark.
-
-### Volatility-regime analysis
-
-VolatilityForge includes volatility-regime analysis to investigate how forecasting behavior varies across realized-volatility conditions.
-
-This analysis matters because an aggregate improvement can conceal deterioration in particular market regimes.
-
-The smearing experiment, for example, improved aggregate metrics but showed weaker performance in the low-realized-variance regime. The project therefore treats aggregate scores as one part of model evaluation rather than sufficient evidence of consistent improvement.
+Diebold–Mariano comparisons, HAC-lag sensitivity analysis, and volatility-regime analysis provide additional ways to assess differences between competing forecasts.
 
 ### Strategy backtesting
 
-The strategy layer evaluates volatility-targeting rules using the saved forecasts and processed feature data.
+The strategy layer converts volatility forecasts into long-only exposure, subject to a maximum-leverage constraint, and applies transaction costs to changes in exposure.
 
-Each forecast made after the close on date *t* is applied to the next session's return. Exposure is long-only and capped by the configured maximum leverage. Transaction costs are charged on absolute changes in exposure.
+Reports include gross and net returns, annualized return and volatility, Sharpe ratio, maximum drawdown, exposure, and turnover. Sensitivity analysis evaluates volatility targets of 8%, 10%, and 12%, with transaction costs ranging from 0 to 20 basis points.
 
-The configured baseline strategy uses:
+### Research dashboard
 
-- Annualized volatility target: 10%
-- Maximum leverage: 1.0
-- Transaction costs: 5 basis points per unit of turnover
-
-The strategy evaluation reports gross and net returns, annualized return and volatility, zero-risk-free-rate Sharpe ratio, maximum drawdown, exposure, and turnover.
-
-The comparison includes a same-period gross buy-and-hold benchmark. Since this benchmark is gross while the strategy's net returns deduct transaction costs, the comparison is not cost-matched.
-
-### Strategy sensitivity analysis
-
-The sensitivity analysis evaluates five forecasting models across:
-
-- Annualized volatility targets of 8%, 10%, and 12%.
-- Transaction costs of 0, 5, 10, and 20 basis points.
-
-The analysis reports net performance and turnover-related costs. It helps examine how results change under alternative strategy assumptions rather than relying on a single configuration.
-
-The strategy reports can be reproduced from the repository root after the required processed features and forecast files have been generated:
-
-```bash
-python -m src.run_strategy_backtest
-python -m src.run_strategy_report
-python -m src.run_strategy_sensitivity
-```
-
-These commands run the configured backtests and generate:
-
-- `reports/strategy_performance.csv`
-- `reports/strategy_sensitivity.csv`
-
-The report-generation commands reuse saved forecasts and processed data; they do not independently rebuild the data pipeline or retrain the forecasting models.
-
-### Interactive research dashboard
-
-The project includes a Streamlit dashboard for exploring research outputs.
-
-Run it from the repository root with the virtual environment activated:
-
-```bash
-python -m streamlit run dashboard/app.py
-```
-
-The documented dashboard views cover the project overview, model comparisons, volatility regimes, and strategy backtests.
-
-The dashboard presents research outputs for inspection; it does not establish that the models or strategies are suitable for live trading.
+A Streamlit dashboard presents the project overview, forecast comparisons, volatility regimes, and strategy backtest results for interactive research and inspection.
 
 ## Engineering decisions
 
 ### Statistical baselines before machine learning
 
-EWMA, GARCH-family models, and HAR-RV establish reference points before more complex machine-learning approaches are considered.
+EWMA, GARCH-family models, and HAR-RV establish reference forecasts before more complex machine-learning approaches are considered. This allows model complexity to be evaluated against established alternatives.
 
-This makes it possible to assess whether additional model complexity improves forecasting performance rather than assuming that it does.
+### Leakage-aware evaluation
 
-### Walk-forward evaluation instead of random splitting
+Expanding-window walk-forward validation preserves chronology. Multi-day targets must fully mature before they can be used for training or residual estimation.
 
-Financial time series have temporal dependencies, and forward targets can overlap with later observations.
+### Separate forecast and strategy evaluation
 
-Expanding-window walk-forward evaluation preserves chronological ordering and makes information availability at each forecast origin explicit.
+Predictive accuracy does not guarantee better net strategy performance. The project therefore evaluates forecast metrics separately from exposure, turnover, transaction costs, and drawdown.
 
-### QLIKE as the primary metric
+### Reproducible research
 
-QLIKE is the primary forecast-comparison metric, while MSE provides a secondary view of forecast error.
-
-Using both metrics helps avoid basing model selection on one measure alone. Statistical forecast comparisons provide additional context, although they do not guarantee economic usefulness.
-
-### Separate forecast evaluation from strategy evaluation
-
-A forecast with better statistical metrics does not necessarily produce a better net trading strategy.
-
-VolatilityForge therefore evaluates predictive performance separately from exposure, turnover, transaction costs, drawdown, and net returns.
-
-### Explicit development and prospective evaluation periods
-
-The period beginning in 2022 has already been used for model comparisons, experimental corrections, regime analysis, and strategy backtests.
-
-It is classified as development data, not as an untouched final holdout. A prospective evaluation period must be defined after the model specifications, features, hyperparameters, and evaluation protocol are frozen.
-
-### Reproducibility with documented limitations
-
-Configuration files, automated tests, saved research reports, and documented commands support repeatable experiments.
-
-Reproducibility is not absolute: market-data providers may revise historical observations, and prospective performance remains unknown until an appropriate future evaluation is conducted.
+Configuration files, automated tests, saved reports, and documented commands support repeatable experiments. Historical data may still change when the data provider revises observations.
 
 ## Results
 
-### Experimental five-day HAR-RV comparison
-
-The development-period smearing experiment produced the following results:
+A separate five-day HAR-RV experiment evaluated Duan's smearing correction using historical out-of-sample log residuals whose targets had fully matured.
 
 | Metric | Baseline HAR-RV | OOS-smearing HAR-RV |
 |---|---:|---:|
@@ -220,75 +88,26 @@ The development-period smearing experiment produced the following results:
 | MSE | 1.017897 × 10⁻⁶ | 9.917346 × 10⁻⁷ |
 | Observations | 1,196 | 1,196 |
 
-Evaluation period: January 3, 2022, through October 8, 2026.
+For the January 3, 2022, to October 8, 2026 development sample, the correction improved aggregate QLIKE by approximately 18.54% and MSE by approximately 2.57%.
 
-In this development sample, the correction improved aggregate QLIKE by approximately 18.54% and MSE by approximately 2.57%.
+However, the improvement was uneven across years and volatility regimes. Low-realized-variance performance deteriorated, and QLIKE improved on 496 of 1,196 individual dates. The correction remains experimental and has not been adopted in the production HAR-RV model.
 
-These results require important qualifications:
-
-- The improvement was uneven across years and realized-variance regimes.
-- Low-realized-variance regime performance deteriorated.
-- QLIKE improved on 496 of the 1,196 individual dates.
-- The experiment does not establish statistical significance or future performance.
-- The correction remains experimental and has not been adopted in the production HAR-RV model.
-
-The latest processed market-data date documented for this experiment is October 15, 2026. The latest valid five-day target is October 8, 2026, because the final five forecast origins do not yet have fully matured five-day outcomes.
-
-These figures describe the supplied development-period experiment, not an independent prospective evaluation.
-
-### Strategy research
-
-The strategy implementation evaluates five forecasting models across the configured volatility-target and transaction-cost assumptions.
-
-The resulting reports include net strategy performance, turnover-related costs, and a same-period gross buy-and-hold benchmark.
-
-No specific strategy return, Sharpe ratio, drawdown, or outperformance claim is made in this case study because numerical strategy results have not been provided here for verification.
-
-The backtests are historical research, not evidence of live executability or future profitability.
+These results do not establish statistical significance or future performance. The development period has already been used for model comparisons and strategy analysis, so it is not an untouched final holdout.
 
 ## What broke / constraints
 
-### Market-data reproducibility
+Market-data revisions can change results between pipeline runs. Multi-day targets also require careful maturity checks to avoid information leakage.
 
-Historical market data can be revised by the provider. Re-running the data pipeline may therefore produce different files even with the same configuration.
+Forecast improvements may vary across volatility regimes, and better statistical metrics do not necessarily translate into stronger net strategy returns after transaction costs.
 
-### Forecast-target maturity
-
-Multi-day realized-variance targets require future observations to mature. Training or estimating corrections from targets that are not yet fully observed would introduce information-availability problems.
-
-### Aggregate metrics can hide regime deterioration
-
-The experimental smearing correction improved aggregate QLIKE and MSE, but its improvement was not uniform. This is why regime analysis and date-level comparisons remain important.
-
-### Statistical improvements do not guarantee economic improvements
-
-Forecast accuracy and trading performance are different objectives. Transaction costs, turnover, leverage constraints, and exposure timing affect the strategy results.
-
-### Development-period reuse
-
-The evaluation period beginning in 2022 has already influenced research decisions and strategy analysis. It cannot be treated as an untouched final holdout.
-
-### Prospective performance remains unknown
-
-No prospective final evaluation has been established in the supplied project status. Historical findings should not be interpreted as evidence that the same performance will persist.
+The prospective evaluation period remains to be defined after model specifications, feature definitions, hyperparameters, and the evaluation protocol are frozen.
 
 ## Next
 
-The next priorities are:
-
-1. Freeze model specifications, feature definitions, hyperparameters, and the evaluation protocol.
-2. Define a prospective evaluation period only after the protocol is frozen.
-3. Preserve that period for final evaluation rather than model selection or tuning.
-4. Improve experiment reproducibility, diagnostics, and reporting.
-5. Complete the source-to-guide scope audit and release documentation.
-6. Verify the implementation status of the remaining candidate models before presenting them as completed.
-
-## Disclaimer
-
-VolatilityForge is for educational and research purposes only. Historical forecasts and backtests do not guarantee future performance and are not financial advice.
+Potential future work includes freezing the evaluation protocol, defining a prospective final evaluation period, improving diagnostics and reproducibility, verifying remaining candidate models, and completing the source-to-guide scope audit.
 
 ## Source code
 
-The project repository contains the implementation, configuration, tests, research reports, and dashboard:
+The complete implementation is available on GitHub:
 
 [View the VolatilityForge repository](https://github.com/quantababy/VolatilityForge)

@@ -1,6 +1,4 @@
-
 import { describe, expect, it } from "vitest";
-
 import { getProject, getProjects } from "@/lib/content";
 
 describe("project content", () => {
@@ -23,7 +21,7 @@ describe("project content", () => {
 
     expect(project).toBeDefined();
     expect(project?.title).toBe("VolatilityForge");
-    expect(project?.status).toBe("In progress");
+    expect(project?.status).toBe("Completed");
     expect(project?.github).toBe(
       "https://github.com/quantababy/VolatilityForge",
     );
@@ -38,8 +36,6 @@ describe("project content", () => {
   });
 
   it("returns undefined for a project that does not exist", () => {
-    const project = getProject("does-not-exist");
-
-    expect(project).toBeUndefined();
+    expect(getProject("nonexistent")).toBeUndefined();
   });
 });
