@@ -1,3 +1,4 @@
+
 import { describe, expect, it } from "vitest";
 
 import { getProject, getProjects } from "@/lib/content";
@@ -6,7 +7,7 @@ describe("project content", () => {
   it("loads all portfolio projects", () => {
     const projects = getProjects();
 
-    expect(projects.length).toBeGreaterThan(0);
+    expect(projects).toHaveLength(3);
   });
 
   it("loads the AEGIS project", () => {
@@ -17,12 +18,15 @@ describe("project content", () => {
     expect(project?.status).toBe("In progress");
   });
 
-  it("loads the MinutesMeet project", () => {
-    const project = getProject("minutesmeet");
+  it("loads the VolatilityForge project", () => {
+    const project = getProject("volatilityforge");
 
     expect(project).toBeDefined();
-    expect(project?.title).toBe("MinutesMeet");
-    expect(project?.status).toBe("Completed");
+    expect(project?.title).toBe("VolatilityForge");
+    expect(project?.status).toBe("In progress");
+    expect(project?.github).toBe(
+      "https://github.com/quantababy/VolatilityForge",
+    );
   });
 
   it("loads the VeritasChain project", () => {

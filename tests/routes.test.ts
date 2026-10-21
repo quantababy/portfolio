@@ -1,3 +1,4 @@
+
 import { describe, expect, it } from "vitest";
 
 import { generateStaticParams } from "@/app/projects/[slug]/page";
@@ -9,7 +10,7 @@ describe("project routes", () => {
     expect(routes).toEqual(
       expect.arrayContaining([
         { slug: "aegis" },
-        { slug: "minutesmeet" },
+        { slug: "volatilityforge" },
         { slug: "veritaschain" },
       ]),
     );

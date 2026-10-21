@@ -195,13 +195,14 @@ export default function ResumePage() {
             ]}
           />
 
+          
           <Project
-            title="MinutesMeet"
-            subtitle="AI Meeting Minutes Generator"
+            title="VolatilityForge"
+            subtitle="Quantitative Market Volatility Forecasting"
             bullets={[
-              "Engineered a speech-to-text and text-to-speech pipeline leveraging frontier LLMs, enabling meeting transcription and natural voice synthesis in real time.",
-              "Integrated Whisper ASR for transcription and transformer-based models for summarization, producing structured meeting minutes with contextual information.",
-              "Built a FastAPI service layer with modular endpoints, supporting deployment and integration into collaborative tools.",
+              "Built a market-data pipeline for SPY and VIX with validated Parquet datasets, date alignment, leakage-aware volatility features, and one-day and five-day realized-variance targets.",
+              "Implemented EWMA, GARCH, GJR-GARCH, HAR-RV, and LightGBM forecasting workflows with expanding-window walk-forward evaluation using QLIKE and MSE, alongside Diebold–Mariano comparisons and volatility-regime analysis.",
+              "Developed transaction-cost-aware volatility-targeting backtests, strategy sensitivity reports, and a Streamlit research dashboard; documented the limits of development-period results and the need for a prospective final evaluation.",
             ]}
           />
         </div>
